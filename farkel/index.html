@@ -294,7 +294,7 @@ function farkelCheck ( )
 
   if (farkelTest)
 	{
-	alert( "Farkel!" );
+	alert( "Farkel! Score was " + currentScore );
 	resetDice();
 	curScore.innerHTML = ( "0" );
 	currentScore = 0;
@@ -338,39 +338,30 @@ function playerSwitch()
 <BODY>
 <center>
 
-						<!--Game Board-->
 
-
-<table>
+<H1><CENTER>SLEEPS FARKEL</CENTER><H1>
 
 						<!--Scoring Table -->
-
 <table width = 500 background="back.jpg">
 	<tr>
-		<td align = "left">Current Roll</td>
-		<td align = "right"><div id='curScore'>0</div></td>
+		<td align = "center">		Player One Score		</td>
+		<td align = "center">		Player Two Score		</td>
+</tr><tr>
+		<td align = "center">		<div id='p1Score'>0</div>		</td>
+		<td align = "center">		<div id='p2Score'>0</div>		</td>	
 
 	</tr>
 </table>
 
-<table width = 200 background="back.jpg">
-	<tr>
-		<td align = "center">		Player One Score		</td>
-		<td align = "center">		<div id='p1Score'>0</div>		</td>
-	</tr>
-						<!--Dice Table -->
+						<!--SPACE-->
+<BR><BR>
 
-	<tr>
-		<td align = "center" >		<IMG onmousedown = diceUpdate(1) name='die1' src = "clear.gif">		</td>
-		<td align = "center">		<IMG onmousedown = diceUpdate(2) name='die2' src = "clear.gif">		</td>
-		<td align = "center">		<IMG onmousedown = diceUpdate(3) name='die3' src = "clear.gif">		</td>
-		<td align = "center">		<IMG onmousedown = diceUpdate(4) name='die4' src = "clear.gif">		</td>
-		<td align = "center">		<IMG onmousedown = diceUpdate(5) name='die5' src = "clear.gif">		</td>
-		<td align = "center">		<IMG onmousedown = diceUpdate(6) name='die6' src = "clear.gif">		</td>
-	</tr>
+						<!--Game Board-->
 
+<table>
 
-						<!-- Decision Buttons  -->
+						<!--Buttons-->
+<table width = 500 background="back.jpg">
 	<tr>
 		<td align = "center" >
 		<IMG onmousedown = takeButton() src = "take.png" width = 50>
@@ -379,14 +370,36 @@ function playerSwitch()
 		<IMG  onmousedown = rollDice() src = "roll.png" width = 50>
 		</td>
 	</tr>
+</table>
+
+
+<table width = 500 background="back.jpg">
+
+						<!--Dice Table -->
+
+	<tr>
+		<td align = "center"> <IMG onmousedown = diceUpdate(1) name='die1' src = "clear.gif"> </td>
+		<td align = "center"> <IMG onmousedown = diceUpdate(2) name='die2' src = "clear.gif"> </td>
+		<td align = "center"> <IMG onmousedown = diceUpdate(3) name='die3' src = "clear.gif"> </td>
+		<td align = "center"> <IMG onmousedown = diceUpdate(4) name='die4' src = "clear.gif"> </td>
+		<td align = "center"> <IMG onmousedown = diceUpdate(5) name='die5' src = "clear.gif"> </td>
+		<td align = "center"> <IMG onmousedown = diceUpdate(6) name='die6' src = "clear.gif"> </td>
+		<td align = "right"><div id='curScore'>0</div></td>
+	</tr>
 
 </table>
 
 
-<table width = 200 background="back.jpg">
-		<td align = "center">		Player Two Score		</td>
-		<td align = "center">		<div id='p2Score'>0</div>		</td>	
-</table>
+
+<!--<table width = 500 background="back.jpg">
+<!--	<tr>
+<!--		<td align = "left">Current Roll</td>
+<!--		<td align = "right"><div id='curScore'>0</div></td>
+<!--
+<!--	</tr>
+<!--</table>
+
+<table>
 
 
 
@@ -396,3 +409,4 @@ function playerSwitch()
 </BODY>
 
 </HTML>
+
