@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=unicode" http-equiv=Content-Type>
+
+<script type = "text/javascript">
+
+					<!-- Dice Setup / Initialization -->
+					
+
+var diceImage, diceValue, diceStatus, scoringDice;
+var currentScore, totalScore;
+
+diceImage = Array( 7 );		//1-6.gif
+diceValue = Array( 7 );		//1-6
+diceStatus = Array( 7 );	//0 - open, 1 - chosen, 2 - closed
+diceList = new Array();		//list of dice to be scored on
+
+currentScore = 0;		//the current score
+totalScore = 0;			//the total score
+var player1Score = 0;
+var player2Score = 0;
+var player = 1;
+
+diceImage[0] = new Image();
+diceImage[0].src = "clear.gif";
+
+for ( var x = 1; x < 7; x++ )
+	{
+	diceImage[x] = new Image();
+	diceImage[x].src = (x + ".gif");
+	diceStatus[x] = 0;
+	}
+
+
+					<!-- Status Change -->
+
+function diceUpdate(dice)
+{ <!-- function diceUpdate -->
+
+	if (diceStatus[dice] == 0)
+	{
+		diceStatus[dice] = 1;
+		document['die' + dice].style.filter='invert()';
+	}
+	else if (diceStatus[dice] == 1)
+	{
+		diceStatus[dice] = 0;
+		document['die' + dice].style.filter='';
+	}
+} <!-- function diceUpdate -->
+
+
+					<!-- Dice Maintainance -->
+					
+
+function diceSetup(status)
+{ 
+<!-- function diceSetup -->
+				 	<!-- status = 1 get dice that have been chosen		-->
+					<!-- note: status = 0 get dice that aren't chosen,	-->
+
+var counter = 0;
+
+
+  for ( var x = 1; x < diceStatus.length; x++ )		<!-- setting up list of dice... -->
+	{
+	if (diceStatus[x] == status)
+		counter++;
+	}
+
+
+  diceList = new Array(counter);
+  counter = 0;
+
+  for ( var x = 1; x < diceStatus.length; x++ )
+	{
+	if (diceStatus[x] == status)
+		{
+		diceList[counter] = diceValue[x];
+		counter++;
+		}
+	}
+
+}
+
+function getScore()
+{
+
+var score = 0;
+
+count = Array (6);
+
+for ( var y = 0; y < 6; y++ )
+	{
+	count[y] = 0;
+	for ( var x = 0; x < diceList.length; x++ )
+		{
+		if (diceList[x] == (y + 1))
+			count[y]++;
+		}
+	}
+
+<!-- settle score for 1's -->
+
+  switch( count[0] ){
+        case 1:
+            score += 100; break;
+	case 2:
+	    score += 200; break;
+	case 3:
+	    score += 1000; break;
+	case 4:
+	    score += 2000; break;
+	case 5:
+	    score += 4000; break;
+	case 6:
+	    score += 8000; break;
+	}
+
+<!-- settle score for 5's -->
+
+  switch( count[4] ){
+        case 1:
+            score += 50; break;
+	case 2:
+	    score += 100; break;
+	case 3:
+	    score += 500; break;
+	case 4:
+	    score += 1000; break;
+	case 5:
+	    score += 2000; break;
+	case 6:
+	    score += 4000; break;	  
+	}
+
+<!-- settle score for 2,3,4,6 -->
+
+  for ( var x = 1; x < 7; x++ )
+  	{
+	switch ( x ){
+	case 2:
+	    normal( 2, count[1]); break;
+	case 3:
+	    normal( 3, count[2]); break;
+	case 4:
+	    normal( 4, count[3]); break;
+	case 6:
+	    normal( 6, count[5]); break;
+		}
+	}
+
+	currentScore += score;
+
+}
+
+function normal ( value, total )
+{
+
+  var score = 0;
+
+	switch ( total ) {
+		case 2:
+			score += 50; break;
+		case 3:
+			score = value * 100; break;
+		case 4:
+			score = value * 200; break;
+		case 5:
+			score = value * 400; break;
+		case 6:
+			score = value * 800; break;
+	}
+
+	currentScore += score;
+}
+
+function rollDice()
+{
+
+
+var allSelected = true;
+
+
+
+diceSetup(1);						<!-- get list of dice for scoring -->
+
+if ( diceList.length > 1 )
+	diceList.sort( compareIntegers );		<!-- sort the list for case statements -->
+
+getScore();						<!-- get the score presented in the selected dice -->
+
+curScore.innerHTML = currentScore;			<!-- assign score to score card -->
+
+for (var x = 0; x < diceStatus.length; x++)		<!-- check to see if all the dice are selected -->
+	if (diceStatus[x] == 0)
+		allSelected = false;
+
+
+if (allSelected)					<!-- if they are all selected, reset them -->
+	for (var x=1; x < diceStatus.length; x++)
+		{
+		diceStatus[x] = 0;
+		document['die' + (x)].style.filter='';
+		}
+
+
+for ( var x = 1; x < 7; x++ )				<!-- roll the dice that haven't been selected -->
+{
+	if (diceStatus[x] == 0)
+	{
+		diceValue[x] = (Math.floor(1 + Math.random() * 6 ));
+		document['die' + x].src = eval("diceImage[diceValue[x]].src");
+	}
+	else
+		diceStatus[x] = 2;			<!-- close the dice so it can't be used again -->
+}
+
+
+farkelCheck();
+
+} <!-- function rollDice -->
+
+function takeButton()
+	{
+	getScore();
+
+	if ( currentScore < 1000  )
+	  {
+		if ( totalScore == 0 )	//check to make sure they have at least 1000 points
+		{
+			alert("You need 1000 points to get on the board!" );
+			currentScore =  0;
+			curScore.innerHTML = ("0");
+			resetDice();
+		}
+		else
+		{
+			totalScore += currentScore;
+			if (player == 1)
+				p1Score.innerHTML = (totalScore);
+			else
+				p2Score.innerHTML = (totalScore);
+			playerSwitch();
+			// ttlScore.innerHTML = (totalScore);
+			currentScore =  0;
+			curScore.innerHTML = ("0");
+			resetDice();			
+		}	 
+
+	  }
+	else
+		{
+			totalScore += currentScore;
+			
+			if (player == 1)
+				p1Score.innerHTML = (totalScore);
+			else
+				p2Score.innerHTML = (totalScore);
+			playerSwitch();
+			
+			currentScore =  0;
+			curScore.innerHTML = ("0");
+			resetDice();			
+		}	 
+	rollDice();
+	}
+
+
+function compareIntegers( value1, value2 )
+{
+	return parseInt( value1  ) - parseInt( value2 );
+}
+
+					<!-- check for farkeling  -->
+
+function farkelCheck ( )
+{
+  var farkelTest = true;
+
+  diceSetup( 0 );
+
+ 
+  for ( var x = 0; x < diceList.length; x++ )
+    {
+    if (diceList[x] == 1)				//if the first dice is a one
+	farkelTest = false;
+    else if (diceList[x] == 5)				//if the first dice is a five
+	farkelTest = false;
+    else if (x != diceList.length - 1 )
+	if ( diceList[x] == diceList[x + 1] )		//if first two dice are a pair
+		farkelTest = false;
+    }
+
+  if (farkelTest)
+	{
+	alert( "Farkel!" );
+	resetDice();
+	curScore.innerHTML = ( "0" );
+	currentScore = 0;
+	playerSwitch();
+	rollDice();
+	}
+
+
+}
+
+function resetDice()
+	{
+	for (var x=1; x < diceStatus.length; x++)
+		{
+		diceStatus[x] = 0;
+		document['die' + (x)].style.filter='';
+		}
+	}
+
+function playerSwitch()
+{
+	if (player == 1)	
+	{
+		player = 2;
+		totalScore = parseInt(p2Score.innerHTML);
+	}
+	else
+	{
+		player = 1;
+		totalScore = parseInt(p1Score.innerHTML);
+	}
+	alert("Player " + player + "'s turn!!!");
+}
+
+// -->
+
+</script>
+
+</HEAD>
+
+<BODY>
+<center>
+
+						<!--Game Board-->
+
+
+<table>
+
+						<!--Scoring Table -->
+
+<table width = 500 background="back.jpg">
+	<tr>
+		<td align = "left">Current Roll</td>
+		<td align = "right"><div id='curScore'>0</div></td>
+
+	</tr>
+</table>
+
+<table width = 200 background="back.jpg">
+	<tr>
+		<td align = "center">		Player One Score		</td>
+		<td align = "center">		<div id='p1Score'>0</div>		</td>
+	</tr>
+						<!--Dice Table -->
+
+	<tr>
+		<td align = "center" >		<IMG onmousedown = diceUpdate(1) name='die1' src = "clear.gif">		</td>
+		<td align = "center">		<IMG onmousedown = diceUpdate(2) name='die2' src = "clear.gif">		</td>
+		<td align = "center">		<IMG onmousedown = diceUpdate(3) name='die3' src = "clear.gif">		</td>
+		<td align = "center">		<IMG onmousedown = diceUpdate(4) name='die4' src = "clear.gif">		</td>
+		<td align = "center">		<IMG onmousedown = diceUpdate(5) name='die5' src = "clear.gif">		</td>
+		<td align = "center">		<IMG onmousedown = diceUpdate(6) name='die6' src = "clear.gif">		</td>
+	</tr>
+
+
+						<!-- Decision Buttons  -->
+	<tr>
+		<td align = "center" >
+		<IMG onmousedown = takeButton() src = "take.png" width = 50>
+		</td>
+		<td align = "center" >
+		<IMG  onmousedown = rollDice() src = "roll.png" width = 50>
+		</td>
+	</tr>
+
+</table>
+
+
+<table width = 200 background="back.jpg">
+		<td align = "center">		Player Two Score		</td>
+		<td align = "center">		<div id='p2Score'>0</div>		</td>	
+</table>
+
+
+
+
+</CENTER>
+
+</BODY>
+
+</HTML>
