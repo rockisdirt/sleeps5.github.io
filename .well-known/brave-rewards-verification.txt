@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: sleeps5.github.io
+Token: a84919106b6ffa1a0f3a217387a3ae0d66ebe7b04937de407517a9129ba18234
