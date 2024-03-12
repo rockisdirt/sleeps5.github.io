@@ -225,11 +225,11 @@ function takeButton()
 	{
 	getScore();
 
-	if ( currentScore < 1000  )
+	if ( currentScore < 350  )
 	  {
-		if ( totalScore == 0 )	//check to make sure they have at least 1000 points
+		if ( totalScore == 0 )	//check to make sure they have at least 350 points
 		{
-			alert("You need 1000 points to get on the board!" );
+			alert("You need 350 points to get on the board!" );
 			currentScore =  0;
 			curScore.innerHTML = ("0");
 			resetDice();
